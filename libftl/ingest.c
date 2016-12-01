@@ -1,12 +1,13 @@
 #include "ftl.h"
 #include "ftl_private.h"
-#include <curl/curl.h>
-#include <jansson.h>
+//#include <curl/curl.h>
+//#include <jansson.h>
 
 static int _ingest_lookup_ip(const char *ingest_location, char ***ingest_ip);
-static int _ingest_compute_score(ftl_ingest_t *ingest);
+//static int _ingest_compute_score(ftl_ingest_t *ingest);
 static int _ping_server(const char *ip, int port);
 
+#if 0
 typedef struct {
 	ftl_ingest_t *ingest;
 	ftl_stream_configuration_private_t *ftl;
@@ -204,28 +205,19 @@ cleanup:
 
 	return (OS_THREAD_TYPE)ret;
 }
-
+#endif
 char * ingest_get_ip(ftl_stream_configuration_private_t *ftl, char *host) {
-	if (ftl->ingest_list == NULL) {
-		if (_ingest_get_hosts(ftl) <= 0) {
-			return NULL;
-		}
-	}
-
-	ftl_ingest_t * elmt = ftl->ingest_list;
-
-	while (elmt != NULL) {
-		if (strcmp(host, elmt->host) == 0) {
-			/*just find first in list with matching host, these are on rr dns so first items will be different each time*/
-			return elmt->ip;
-		}
-
-		elmt = elmt->next;
-	}
-
-	return NULL;
+    char **ips;
+    int found;
+    
+    if ( (found = _ingest_lookup_ip(host, &ips)) > 0){
+        return ips[0];
+    }
+    
+    return NULL;
+    
 }
-
+#if 0
 char * ingest_find_best(ftl_stream_configuration_private_t *ftl) {
 
 	OS_THREAD_HANDLE *handle;
@@ -350,7 +342,7 @@ static int _ingest_compute_score(ftl_ingest_t *ingest) {
 
 	return (int)load_score + rtt_score;
 }
-
+#endif
 static int _ingest_lookup_ip(const char *ingest_location, char ***ingest_ip) {
 	struct hostent *remoteHost;
 	struct in_addr addr;

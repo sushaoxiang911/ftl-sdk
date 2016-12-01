@@ -2,7 +2,6 @@
 #define __FTL_INTERNAL
 #include "ftl.h"
 #include "ftl_private.h"
-#include <curl/curl.h>
 
 static BOOL _get_chan_id_and_key(const char *stream_key, uint32_t *chan_id, char *key);
 static int _lookup_ingest_ip(const char *ingest_location, char *ingest_ip);
@@ -16,7 +15,7 @@ FTL_API const int FTL_VERSION_MAINTENANCE = 0;
 FTL_API ftl_status_t ftl_init() {
   init_sockets();
   os_init();
-  curl_global_init(CURL_GLOBAL_ALL);
+
   return FTL_SUCCESS;
 }
 
@@ -82,11 +81,7 @@ FTL_API ftl_status_t ftl_ingest_create(ftl_handle_t *ftl_handle, ftl_ingest_para
   ftl->async_queue_alive = 1;
   
   char *ingest_ip = NULL;
-
-  if (strcmp(params->ingest_hostname, "auto") == 0) {
-	  ingest_ip = ingest_find_best(ftl);
-  }
-  else {
+ {
 	  ingest_ip = ingest_get_ip(ftl, params->ingest_hostname);
   }
 

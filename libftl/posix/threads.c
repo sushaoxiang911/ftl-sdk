@@ -23,6 +23,7 @@
 **/
 
 #include "threads.h"
+#include <unistd.h>
 
 pthread_mutexattr_t ftl_default_mutexattr;
 
@@ -43,6 +44,8 @@ int os_init(){
   pthread_mutexattr_init(&ftl_default_mutexattr);
   // Set pthread mutexes to recursive to mirror Windows mutex behavior
   pthread_mutexattr_settype(&ftl_default_mutexattr, PTHREAD_MUTEX_RECURSIVE);
+    
+    return 0;
 }
 
 int os_init_mutex(OS_MUTEX *mutex) {
@@ -93,7 +96,8 @@ int os_sem_pend(OS_SEMAPHORE *sem, int ms_timeout) {
 			if ((retval = sem_trywait(sem->sem)) == 0) {
 				break;
 			}
-			sleep_ms(sleep_interval);
+			//ms_sleep(sleep_interval);
+            usleep(sleep_interval * 1000);
 			ms_timeout -= sleep_interval;
 		}
 

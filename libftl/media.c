@@ -340,6 +340,8 @@ int media_send_video(ftl_stream_configuration_private_t *ftl, int64_t dts_usec, 
 
 	nalu_type = data[0] & 0x1F;
 	nri = (data[0] >> 5) & 0x3;
+    
+    FTL_LOG(ftl, FTL_LOG_INFO, "Nalu Type is %d\n", nalu_type);
 
 	_update_timestamp(ftl, mc, dts_usec);
 

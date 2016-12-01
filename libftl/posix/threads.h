@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
-#include "gettimeofday/gettimeofday.h"
+#include "gettimeofday.h"
 
 typedef pthread_mutex_t OS_MUTEX;
 typedef bool BOOL;
